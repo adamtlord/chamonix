@@ -1,128 +1,84 @@
-/* global data Fuse */
+const BASE_URL = "https://swapi.dev/api/planets";
+
 window.dataTable = () => ({
-  items: [],
-  view: 5,
+  rows: [],
+  loading: true,
   searchInput: "",
-  pages: [],
-  offset: 5,
-  pagination: {
-    total: data.length,
-    lastPage: Math.ceil(data.length / 5),
-    perPage: 5,
-    currentPage: 1,
-    from: 1,
-    to: 1 * 5,
-  },
+  total: null,
+  perPage: 10,
   currentPage: 1,
   sorted: {
     field: "name",
-    rule: "asc",
+    desc: false,
   },
   initData() {
-    this.items = data.sort(this.compareOnKey("name", "asc"));
-    this.showPages();
+    this.fetchData();
   },
-  compareOnKey(key, rule) {
-    return (a, b) => {
-      if (
-        key === "name" ||
-        key === "job" ||
-        key === "email" ||
-        key === "country"
-      ) {
-        let comparison = 0;
-        const fieldA = a[key].toUpperCase();
-        const fieldB = b[key].toUpperCase();
-        if (rule === "asc") {
-          if (fieldA > fieldB) {
-            comparison = 1;
-          } else if (fieldA < fieldB) {
-            comparison = -1;
-          }
-        } else if (fieldA < fieldB) {
-          comparison = 1;
-        } else if (fieldA > fieldB) {
-          comparison = -1;
-        }
-        return comparison;
-      }
-      if (rule === "asc") {
-        return a.year - b.year;
-      }
-      return b.year - a.year;
-    };
+  fetchData() {
+    this.loading = true;
+    fetch(`${BASE_URL}?page=${this.currentPage}`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.rows = data.results;
+        this.total = data.count;
+        this.perPage = data.results.length;
+        this.loading = false;
+      });
   },
-  checkView(index) {
-    return !(index > this.pagination.to || index < this.pagination.from);
+  goToPage(n) {
+    this.currentPage = n;
+    this.fetchData();
   },
-  checkPage(item) {
-    if (item <= this.currentPage + 5) {
-      return true;
-    }
-    return false;
-  },
-  search(value) {
-    if (value.length > 1) {
-      const options = {
-        shouldSort: true,
-        keys: ["name", "job"],
-        threshold: 0,
-      };
-      const fuse = new Fuse(data, options);
-      this.items = fuse.search(value).map((elem) => elem.item);
-    } else {
-      this.items = data;
-    }
-    // console.log(this.items.length)
+  // compareOnKey(key, rule) {
+  //   return (a, b) => {
+  //     if (
+  //       key === "name" ||
+  //       key === "job" ||
+  //       key === "email" ||
+  //       key === "country"
+  //     ) {
+  //       let comparison = 0;
+  //       const fieldA = a[key].toUpperCase();
+  //       const fieldB = b[key].toUpperCase();
+  //       if (rule === "asc") {
+  //         if (fieldA > fieldB) {
+  //           comparison = 1;
+  //         } else if (fieldA < fieldB) {
+  //           comparison = -1;
+  //         }
+  //       } else if (fieldA < fieldB) {
+  //         comparison = 1;
+  //       } else if (fieldA > fieldB) {
+  //         comparison = -1;
+  //       }
+  //       return comparison;
+  //     }
+  //     if (rule === "asc") {
+  //       return a.year - b.year;
+  //     }
+  //     return b.year - a.year;
+  //   };
+  // },
+  // search(value) {
+  //   if (value.length > 1) {
+  //     const options = {
+  //       shouldSort: true,
+  //       keys: ["name", "job"],
+  //       threshold: 0,
+  //     };
+  //     const fuse = new Fuse(data, options);
+  //     this.items = fuse.search(value).map((elem) => elem.item);
+  //   } else {
+  //     this.items = data;
+  //   }
+  //   // console.log(this.items.length)
 
-    this.changePage(1);
-    this.showPages();
-  },
-  sort(field, rule) {
-    this.items = this.items.sort(this.compareOnKey(field, rule));
-    this.sorted.field = field;
-    this.sorted.rule = rule;
-  },
-  changePage(page) {
-    if (page >= 1 && page <= this.pagination.lastPage) {
-      this.currentPage = page;
-      const total = this.items.length;
-      const lastPage = Math.ceil(total / this.view) || 1;
-      const from = (page - 1) * this.view + 1;
-      let to = page * this.view;
-      if (page === lastPage) {
-        to = total;
-      }
-      this.pagination.total = total;
-      this.pagination.lastPage = lastPage;
-      this.pagination.perPage = this.view;
-      this.pagination.currentPage = page;
-      this.pagination.from = from;
-      this.pagination.to = to;
-      this.showPages();
-    }
-  },
-  showPages() {
-    const pages = [];
-    let from = this.pagination.currentPage - Math.ceil(this.offset / 2);
-    if (from < 1) {
-      from = 1;
-    }
-    let to = from + this.offset - 1;
-    if (to > this.pagination.lastPage) {
-      to = this.pagination.lastPage;
-    }
-    while (from <= to) {
-      pages.push(from);
-      from += 1;
-    }
-    this.pages = pages;
-  },
-  changeView() {
-    this.changePage(1);
-    this.showPages();
-  },
-  isEmpty() {
-    return !this.pagination.total;
-  },
+  //   this.changePage(1);
+  //   this.showPages();
+  // },
+  // sort(field, rule) {
+  //   this.items = this.items.sort(this.compareOnKey(field, rule));
+  //   this.sorted.field = field;
+  //   this.sorted.rule = rule;
+  // },
 });
