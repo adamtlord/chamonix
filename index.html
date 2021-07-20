@@ -5,18 +5,18 @@
   <title>Alpine.js DataTable POC</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <!-- https://adamtlord.github.io/chamonix/ -->
-
-<body class="relative bg-gray-200">
-  <div class="mt-8" x-data="dataTable()" x-init="initData()">
+<body class="bg-gray-200">
+  <div class="my-8" x-data="dataTable()" x-init="initData()">
     <div class="max-w-screen-xl w-full mx-auto px-4">
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
           <h3 class="text-lg leading-6 font-medium text-gray-900">
-            REST DataTable
+            Alpine.js REST DataTable
           </h3>
           <p class="mt-1 text-sm text-gray-500">
             Proof of Concept
