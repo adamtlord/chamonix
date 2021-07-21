@@ -1,7 +1,44 @@
 const BASE_URL = "https://swapi.dev/api/planets";
 
+const filters = {
+  intComma: (val) => {
+    if (Number.isNaN(parseInt(val, 10))) {
+      return val;
+    }
+    return parseInt(val, 10).toLocaleString();
+  },
+};
+
 window.dataTable = () => ({
   // properties
+  columns: [
+    {
+      name: "Name",
+      attribute: "name",
+      sortable: "name",
+      classNames: "font-medium ",
+    },
+    {
+      name: "Size",
+      attribute: "diameter",
+      sortable: "diameter",
+      format: filters.intComma,
+    },
+    {
+      name: "Terrain",
+      attribute: "terrain",
+    },
+    {
+      name: "Climate",
+      attribute: "climate",
+    },
+    {
+      name: "Pop.",
+      attribute: "population",
+      sortable: "population",
+      format: filters.intComma,
+    },
+  ],
   rows: [],
   loading: true,
   searchInput: "",
@@ -10,16 +47,24 @@ window.dataTable = () => ({
   pageSize: 10,
   spreadSize: 3,
   currentPage: 1,
+  sortAttribute: "",
+  sortDirection: "asc",
+  prevSort: "",
   // methods
   initData() {
     this.fetchData();
   },
   fetchData() {
     this.loading = true;
-    if (this.prevSearch !== this.searchInput) {
+    const sortParam = `${this.sortDirection === "desc" ? "-" : ""}${
+      this.sortAttribute
+    }`;
+    if (this.prevSearch !== this.searchInput || this.prevSort !== sortParam) {
       this.currentPage = 1;
     }
-    fetch(`${BASE_URL}?page=${this.currentPage}&search=${this.searchInput}`)
+    fetch(
+      `${BASE_URL}?page=${this.currentPage}&search=${this.searchInput}&ordering=${sortParam}`
+    )
       .then((response) => response.json())
       .then((data) => {
         this.rows = data.results;
@@ -27,6 +72,7 @@ window.dataTable = () => ({
         this.pageSize = data.results.length;
         this.loading = false;
         this.prevSearch = this.searchInput;
+        this.prevSort = sortParam;
       });
   },
   goToPage(n) {
@@ -36,12 +82,14 @@ window.dataTable = () => ({
   search() {
     this.fetchData();
   },
-  // filters
-  intComma(val) {
-    if (Number.isNaN(parseInt(val, 10))) {
-      return val;
+  sortBy(sortAttribute) {
+    if (this.sortAttribute !== sortAttribute) {
+      this.sortAttribute = sortAttribute;
+      this.sortDirection = "asc";
+    } else {
+      this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
     }
-    return parseInt(val, 10).toLocaleString();
+    this.fetchData();
   },
   // getters
   pageSpread() {
