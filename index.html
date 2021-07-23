@@ -13,6 +13,10 @@
 <body class="bg-gray-200">
   <div class="my-8" x-data="dataTable()" x-init="initData()">
     <div class="max-w-screen-xl w-full mx-auto px-4">
+      <div class="mx-auto mt-8 mb-4 font-medium text-sm text-gray-700">
+        <p><strong>Assumption:</strong> All pagination, searching, and ordering happens server-side.<br>
+        <strong>Problem:</strong> This free API doesn't do any ordering.</p>
+      </div>
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
           <div class="flex justify-between">
@@ -44,7 +48,6 @@
             </div>
           </div>
         </div>
-        <div class="">
           <table class="min-w-full  relative divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
