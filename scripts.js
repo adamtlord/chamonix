@@ -16,7 +16,7 @@ window.dataTable = () => ({
       name: "Name",
       attribute: "name",
       sortable: "name",
-      classNames: "font-medium ",
+      classNames: "font-medium",
     },
     {
       name: "Size",
@@ -41,6 +41,7 @@ window.dataTable = () => ({
   ],
   rows: [],
   loading: true,
+  fetchUrl: "",
   searchInput: "",
   prevSearch: "",
   totalRecords: null,
@@ -62,9 +63,10 @@ window.dataTable = () => ({
     if (this.prevSearch !== this.searchInput || this.prevSort !== sortParam) {
       this.currentPage = 1;
     }
-    fetch(
-      `${BASE_URL}?page=${this.currentPage}&search=${this.searchInput}&ordering=${sortParam}`
-    )
+    this.fetchUrl = `${BASE_URL}?page=${this.currentPage}${
+      this.searchInput ? `&search=${this.searchInput}` : ""
+    }${sortParam ? `&ordering=${sortParam}` : ""}`;
+    fetch(this.fetchUrl)
       .then((response) => response.json())
       .then((data) => {
         this.rows = data.results;
@@ -86,8 +88,11 @@ window.dataTable = () => ({
     if (this.sortAttribute !== sortAttribute) {
       this.sortAttribute = sortAttribute;
       this.sortDirection = "asc";
+    } else if (this.sortDirection === "asc") {
+      this.sortDirection = "desc";
     } else {
-      this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      this.sortAttribute = "";
+      this.sortDirection = "asc";
     }
     this.fetchData();
   },
