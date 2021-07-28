@@ -7,196 +7,210 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+
 </head>
 <!-- https://adamtlord.github.io/chamonix/ -->
+
 <body class="bg-gray-200">
   <div class="my-8" x-data="dataTable()" x-init="initData()">
     <div class="max-w-screen-xl w-full mx-auto px-4">
       <div class="mx-auto mt-8 mb-4 font-medium text-sm text-gray-700 flex justify-between items-center">
         <div class="mx-2">
           <p class="mb-1"><strong>Assumption:</strong> All pagination, searching, and ordering happens server-side. |
-          <strong>Problem:</strong> This free API doesn't do any ordering.</p>
+            <strong>Problem:</strong> This free API doesn't do any ordering.</p>
           <p class="">Fetch URL:
-          <span class="rounded bg-indigo-200 px-2 py-1 font-mono" x-text="fetchUrl"></span></p>
+            <span class="rounded bg-indigo-200 px-2 py-1 font-mono" x-text="fetchUrl"></span></p>
         </div>
         <a href="https://github.com/adamtlord/chamonix" class="text-indigo-500 hover:text-indigo-600 transition-colors">
           <svg class="w-8 h-8 mx-2" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
           </svg>
         </a>
       </div>
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-          <div class="flex justify-between">
-            <div class="flex flex-col">
-              <h3 class="text-lg leading-6 font-medium text-gray-900">
-                Alpine.js REST DataTable
-              </h3>
-              <p class="mt-1 text-sm text-gray-500">
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              Alpine.js REST DataTable
+              <span class="font-light text-gray-500">
                 Proof of Concept
-              </p>
+              </span>
+            </h3>
+          </div>
+          <div class="flex justify-between mt-3 items-center">
+            <div class="flex items-center">
+              <label for="email" class="block text-sm font-light text-gray-700">Results Per Page</label>
+              <select name="perPage" x-model="pageSize" x-on:change="fetchData"
+                class="ml-3 block focus:ring-indigo-500 focus:border-indigo-500 shadow-sm w-auto sm:text-sm border-gray-300 rounded-md">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+              </select>
             </div>
-            <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
-              <div class="max-w-lg w-full lg:max-w-xs">
-                <label for="search" class="sr-only">Search</label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" x-description="Heroicon name: solid/search"
-                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd"
-                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                  </div>
-                  <input id="search" name="search" x-on:input.debounce.500="search" x-model="searchInput"
-                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    placeholder="Search" type="search">
+            <div class="">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <!-- Heroicon name: solid/search -->
+                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd" />
+                  </svg>
                 </div>
+                <input id="search" name="search" x-on:input.debounce.500="search" x-model="searchInput"
+                  class="shadow-sm block w-auto bg-white border border-gray-300 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-700 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Search" type="search">
               </div>
             </div>
           </div>
         </div>
-          <table class="min-w-full relative divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <template x-for="column in columns">
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <template x-if="column.sortable">
-                      <a href="#" class="flex space-x-2" @click.prevent="sortBy(column.sortable)">
-                        <span x-text="column.name"></span>
-                        <span x-show="sortAttribute === column.sortable">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path x-show="sortDirection === 'asc'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
-                            <path x-show="sortDirection === 'desc'"stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6" />
-                          </svg>
-                        </span>
-                        <span x-show="sortAttribute !== column.sortable">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                          </svg>
-                        </span>
-                      </a>
-                    </template>
-                    <template x-if="!column.sortable">
+
+        <table class="min-w-full relative divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <template x-for="column in columns">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <template x-if="column.sortable">
+                    <a href="#" class="flex space-x-2" @click.prevent="sortBy(column.sortable)">
                       <span x-text="column.name"></span>
-                    </template>
-                  </th>
+                      <span x-show="sortAttribute === column.sortable">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor">
+                          <path x-show="sortDirection === 'asc'" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                          <path x-show="sortDirection === 'desc'" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+                        </svg>
+                      </span>
+                      <span x-show="sortAttribute !== column.sortable">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                        </svg>
+                      </span>
+                    </a>
+                  </template>
+                  <template x-if="!column.sortable">
+                    <span x-text="column.name"></span>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-show="loading">
+              <div class="absolute p-8 top-0 left-0 w-full h-full">loading yeah?</div>
+            </template>
+            <template x-for="(row, idx) in rows">
+              <tr x-show="!loading" x-bind:class="(idx % 2  == 0) ? 'bg-gray-50' : 'bg-white'">
+                <template x-for="column in columns">
+                  <td x-bind:class="`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${column.classNames}`">
+                    <span x-text="column.format ? column.format(row[column.attribute]) : row[column.attribute]"></span>
+                  </td>
                 </template>
               </tr>
-            </thead>
-            <tbody>
-              <template x-for="i in [...Array(pageSize).keys()]">
-                <tr x-show="loading" class="animate-pulse">
-                  <template x-for="column in columns">
-                    <td class="px-6 py-3">
-                      <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                    </td>
-                  </template>
-                </tr>
-              </template>
-              <template x-for="(row, idx) in rows">
-                <tr x-show="!loading" x-bind:class="(idx % 2  == 0) ? 'bg-gray-50' : 'bg-white'">
-                  <template x-for="column in columns">
-                    <td x-bind:class="`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${column.classNames}`">
-                      <span x-text="column.format ? column.format(row[column.attribute]) : row[column.attribute]"></span>
-                    </td>
-                  </template>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-          <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p class="text-sm text-gray-700">
-                  Showing
-                  <span class="font-medium" x-text="currentPage * pageSize - (pageSize - 1)"></span>
-                  to
-                  <span class="font-medium" x-text="currentPage * pageSize"></span>
-                  of
-                  <span class="font-medium" x-text="totalRecords"></span>
-                  results
-                </p>
-              </div>
-              <div>
-                <nav x-show="totalRecords / pageSize > 1"
-                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                  <button
-                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                    @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
-                    x-bind:class="{'opacity-50 bg-white': currentPage === 1}">
-                    <span class="sr-only">Previous</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      aria-hidden="true">
-                      <path fill-rule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                  <button
-                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                    x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === 1}"
-                    x-show="currentPage > 1 + spreadSize" @click.prevent="goToPage(1)">
-                    1
-                  </button>
-                  <span
-                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                    x-show="currentPage > 1 + spreadSize">
-                    &hellip;
-                  </span>
+            </template>
+          </tbody>
+        </table>
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700" x-show="!loading">
+                Showing
+                <span class="font-medium" x-text="currentPage * pageSize - (pageSize - 1)"></span>
+                to
+                <span class="font-medium" x-text="rows.length"></span>
+                of
+                <span class="font-medium" x-text="totalRecords"></span>
+                results
+              </p>
+            </div>
+            <div>
+              <nav x-show="totalPages > 1" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                aria-label="Pagination">
+                <button
+                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
+                  x-bind:class="{'opacity-50 bg-white': currentPage === 1}">
+                  <span class="sr-only">Previous</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <button
+                  class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === 1}"
+                  x-show="currentPage > 1 + spreadSize" @click.prevent="goToPage(1)">
+                  1
+                </button>
+                <span
+                  class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  x-show="currentPage > 1 + spreadSize">
+                  &hellip;
+                </span>
 
-                  <template x-for="i in pageSpread()">
-                    <button
-                      class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                      x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === i}"
-                      @click.prevent="goToPage(i)" x-text="i">
+                <template x-for="i in pageSpread()">
+                  <button
+                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                    x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === i}"
+                    @click.prevent="goToPage(i)" x-text="i">
+                  </button>
+                </template>
+                <span
+                  class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  x-show="currentPage < totalPages - spreadSize">
+                  &hellip;
+                </span>
+                <button
+                  class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === totalPages}"
+                  x-show="currentPage <= totalPages - spreadSize" @click.prevent="goToPage(totalPages)"
+                  x-text="totalPages"></button>
+                <button
+                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  @click.prevent="goToPage(currentPage + 1)"
+                  x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
+                  x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''">
+                  <span class="sr-only">Next</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </nav>
+              <!-- Alternative prev/next pagination
+                  <div class="flex-1 flex justify-between sm:justify-end">
+                    <button @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
+                      x-bind:class="currentPage === 1 ? 'opacity-50 bg-white' : ''"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                      Previous
                     </button>
-                  </template>
-                  <span
-                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                    x-show="currentPage < totalPages - spreadSize">
-                    &hellip;
-                  </span>
-                  <button
-                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                    x-bind:class="{'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 hover:bg-indigo-50': currentPage === totalPages}"
-                    x-show="currentPage <= totalPages - spreadSize" @click.prevent="goToPage(totalPages)"
-                    x-text="totalPages"></button>
-                  <button
-                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                    @click.prevent="goToPage(currentPage + 1)"
-                    x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
-                    x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''">
-                    <span class="sr-only">Next</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      aria-hidden="true">
-                      <path fill-rule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                </nav>
-                <!-- Alternative prev/next pagination
-                <div class="flex-1 flex justify-between sm:justify-end">
-                  <button @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
-                    x-bind:class="currentPage === 1 ? 'opacity-50 bg-white' : ''"
-                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-                    Previous
-                  </button>
-                  <button @click.prevent="goToPage(currentPage + 1)"
-                    x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
-                    x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''"
-                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-                    Next
-                  </button>
-                </div> -->
-              </div>
+                    <button @click.prevent="goToPage(currentPage + 1)"
+                      x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
+                      x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''"
+                      class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                      Next
+                    </button>
+                  </div> -->
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  </div>
 </body>
 <script src="./scripts.js"></script>
+
 </html>

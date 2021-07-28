@@ -45,7 +45,7 @@ window.dataTable = () => ({
   searchInput: "",
   prevSearch: "",
   totalRecords: null,
-  pageSize: 10,
+  pageSize: "10",
   spreadSize: 3,
   currentPage: 1,
   sortAttribute: "",
@@ -65,13 +65,12 @@ window.dataTable = () => ({
     }
     this.fetchUrl = `${BASE_URL}?page=${this.currentPage}${
       this.searchInput ? `&search=${this.searchInput}` : ""
-    }${sortParam ? `&ordering=${sortParam}` : ""}`;
+    }${sortParam ? `&ordering=${sortParam}` : ""}&page_size=${this.pageSize}`;
     fetch(this.fetchUrl)
       .then((response) => response.json())
       .then((data) => {
         this.rows = data.results;
         this.totalRecords = data.count;
-        this.pageSize = data.results.length;
         this.loading = false;
         this.prevSearch = this.searchInput;
         this.prevSort = sortParam;
@@ -102,7 +101,7 @@ window.dataTable = () => ({
     const start = Math.max(this.currentPage - (this.spreadSize - 1), 1);
     const end = Math.min(
       this.currentPage + (this.spreadSize - 1),
-      Math.ceil(this.totalRecords / this.pageSize)
+      Math.ceil(this.totalRecords / parseInt(this.pageSize, 10))
     );
     for (let i = start; i <= end; i += 1) {
       range.push(i);
@@ -111,6 +110,6 @@ window.dataTable = () => ({
   },
   // computed
   get totalPages() {
-    return Math.ceil(this.totalRecords / this.pageSize);
+    return Math.ceil(this.totalRecords / parseInt(this.pageSize, 10));
   },
 });
