@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "live-server & TAILWIND_MODE=watch postcss ./tailwind.css -o ./styles.css --watch",
-    "build": "NODE_ENV=production  postcss -i ./tailwind.css -o ./styles.css"
+    "build": "NODE_ENV=production postcss ./tailwind.css -o ./styles.css"
   },
   "repository": {
     "type": "git",
