@@ -1,4 +1,4 @@
-const BASE_URL = "https://swapi.dev/api/planets";
+const BASE_URL = "https://swapi-json-server.onrender.com/planets";
 
 const filters = {
   intComma: (val) => {
@@ -26,11 +26,11 @@ window.dataTable = () => ({
     },
     {
       name: "Terrain",
-      attribute: "terrain",
+      attribute: "email",
     },
     {
       name: "Climate",
-      attribute: "climate",
+      attribute: "body",
     },
     {
       name: "Pop.",
@@ -57,23 +57,29 @@ window.dataTable = () => ({
   },
   fetchData() {
     this.loading = true;
-    const sortParam = `${this.sortDirection === "desc" ? "-" : ""}${
-      this.sortAttribute
-    }`;
-    if (this.prevSearch !== this.searchInput || this.prevSort !== sortParam) {
+    if (
+      this.prevSearch !== this.searchInput ||
+      this.prevSort !== this.sortAttribute + this.sortDirection
+    ) {
       this.currentPage = 1;
     }
-    this.fetchUrl = `${BASE_URL}?page=${this.currentPage}${
-      this.searchInput ? `&search=${this.searchInput}` : ""
-    }${sortParam ? `&ordering=${sortParam}` : ""}&page_size=${this.pageSize}`;
+    this.fetchUrl = `${BASE_URL}?_page=${this.currentPage}${
+      this.searchInput ? `&q=${this.searchInput}` : ""
+    }${
+      this.sortAttribute
+        ? `&_sort=${this.sortAttribute}&_order=${this.sortDirection}`
+        : ""
+    }&_limit=${this.pageSize}`;
     fetch(this.fetchUrl)
-      .then((response) => response.json())
+      .then((response) => {
+        this.totalRecords = response.headers.get("x-total-count");
+        return response.json();
+      })
       .then((data) => {
-        this.rows = data.results;
-        this.totalRecords = data.count;
+        this.rows = data;
         this.loading = false;
         this.prevSearch = this.searchInput;
-        this.prevSort = sortParam;
+        this.prevSort = this.sortAttribute + this.sortDirection;
       });
   },
   goToPage(n) {
