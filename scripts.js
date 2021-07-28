@@ -51,6 +51,7 @@ window.dataTable = () => ({
   sortAttribute: "",
   sortDirection: "asc",
   prevSort: "",
+  prevPageSize: "",
   // methods
   initData() {
     this.fetchData();
@@ -59,7 +60,8 @@ window.dataTable = () => ({
     this.loading = true;
     if (
       this.prevSearch !== this.searchInput ||
-      this.prevSort !== this.sortAttribute + this.sortDirection
+      this.prevSort !== this.sortAttribute + this.sortDirection ||
+      this.prevPageSize !== this.pageSize
     ) {
       this.currentPage = 1;
     }
@@ -80,6 +82,7 @@ window.dataTable = () => ({
         this.loading = false;
         this.prevSearch = this.searchInput;
         this.prevSort = this.sortAttribute + this.sortDirection;
+        this.prevPageSize = this.pageSize;
       });
   },
   goToPage(n) {
