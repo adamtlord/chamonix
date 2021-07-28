@@ -13,6 +13,8 @@
 <!-- https://adamtlord.github.io/chamonix/ -->
 
 <body class="bg-gray-200">
+
+
   <div class="my-8" x-data="dataTable()" x-init="initData()">
     <div class="max-w-screen-xl w-full mx-auto px-4">
       <div class="mx-auto mt-8 mb-4 font-medium text-sm text-gray-700 flex justify-between items-center">
@@ -69,6 +71,19 @@
             </div>
           </div>
         </div>
+        <div class="relative">
+          <div x-show="loading" class="h-full bg-opacity-20 absolute z-10 top-0 left-0 w-full flex justify-center items-center text-center bg-indigo-100">
+            <div class="text-indigo-300">
+
+            <svg class="inline-block animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>
+              Loading
+            </span>
+          </div>
+          </div>
 
         <table class="min-w-full relative divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -104,11 +119,8 @@
             </tr>
           </thead>
           <tbody>
-            <template x-show="loading">
-              <div class="absolute p-8 top-0 left-0 w-full h-full">loading yeah?</div>
-            </template>
             <template x-for="(row, idx) in rows">
-              <tr x-show="!loading" x-bind:class="(idx % 2  == 0) ? 'bg-gray-50' : 'bg-white'">
+              <tr x-bind:class="(idx % 2  == 0) ? 'bg-gray-50' : 'bg-white'">
                 <template x-for="column in columns">
                   <td x-bind:class="`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${column.classNames}`">
                     <span x-text="column.format ? column.format(row[column.attribute]) : row[column.attribute]"></span>
@@ -118,6 +130,7 @@
             </template>
           </tbody>
         </table>
+      </div>
         <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
