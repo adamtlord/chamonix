@@ -26,11 +26,11 @@ window.dataTable = () => ({
     },
     {
       name: "Terrain",
-      attribute: "email",
+      attribute: "terrain",
     },
     {
       name: "Climate",
-      attribute: "body",
+      attribute: "climate",
     },
     {
       name: "Pop.",
