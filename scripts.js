@@ -1,5 +1,6 @@
 const BASE_URL = "https://swapi-json-server.onrender.com/planets";
 
+// filters
 const filters = {
   intComma: (val) => {
     if (Number.isNaN(parseInt(val, 10))) {
@@ -58,6 +59,7 @@ window.dataTable = () => ({
   },
   fetchData() {
     this.loading = true;
+    // if search, sort, or page size changes, reset to page 1
     if (
       this.prevSearch !== this.searchInput ||
       this.prevSort !== this.sortAttribute + this.sortDirection ||
@@ -65,21 +67,33 @@ window.dataTable = () => ({
     ) {
       this.currentPage = 1;
     }
-    this.fetchUrl = `${BASE_URL}?_page=${this.currentPage}${
-      this.searchInput ? `&q=${this.searchInput}` : ""
-    }${
-      this.sortAttribute
-        ? `&_sort=${this.sortAttribute}&_order=${this.sortDirection}`
-        : ""
-    }&_limit=${this.pageSize}`;
+    // construct url
+    const params = new URLSearchParams();
+    params.append("_page", this.currentPage);
+    params.append("_limit", this.pageSize);
+
+    if (this.searchInput) {
+      params.append("q", this.searchInput);
+    }
+
+    if (this.sortAttribute) {
+      params.append("_sort", this.sortAttribute);
+      params.append("_order", this.sortDirection);
+    }
+
+    this.fetchUrl = `${BASE_URL}?${params.toString()}`;
+
     fetch(this.fetchUrl)
       .then((response) => {
+        // json-server returns total records in a header ¯\_(ツ)_/¯
         this.totalRecords = response.headers.get("x-total-count");
         return response.json();
       })
       .then((data) => {
         this.rows = data;
         this.loading = false;
+        // store the previously used params to compare against.
+        // I think this is easier than setting up a watch method.
         this.prevSearch = this.searchInput;
         this.prevSort = this.sortAttribute + this.sortDirection;
         this.prevPageSize = this.pageSize;
@@ -89,10 +103,8 @@ window.dataTable = () => ({
     this.currentPage = n;
     this.fetchData();
   },
-  search() {
-    this.fetchData();
-  },
   sortBy(sortAttribute) {
+    // toggle up, toggle down, toggle off
     if (this.sortAttribute !== sortAttribute) {
       this.sortAttribute = sortAttribute;
       this.sortDirection = "asc";
