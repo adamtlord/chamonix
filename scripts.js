@@ -1,6 +1,7 @@
-const BASE_URL = "https://swapi-json-server.onrender.com/planets";
+// This is important! This is where the data comes from.
+const BASE_URL = "http://localhost:3001/planets";
 
-// filters
+// filters -- any functions you might want to apply to cell data can go here
 const filters = {
   intComma: (val) => {
     if (Number.isNaN(parseInt(val, 10))) {
@@ -12,6 +13,7 @@ const filters = {
 
 window.dataTable = () => ({
   // properties
+  // define your columns
   columns: [
     {
       name: "Name",

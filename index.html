@@ -44,7 +44,9 @@
               </span>
             </h3>
           </div>
+          <!-- top row -->
           <div class="flex justify-between mt-3 items-center">
+            <!-- results per page -->
             <div class="flex items-center">
               <label for="email" class="block text-sm font-light text-gray-700">Results Per Page</label>
               <select name="perPage" x-model="pageSize" x-on:change="fetchData"
@@ -55,6 +57,8 @@
                 <option>100</option>
               </select>
             </div>
+            <!-- /results per page -->
+            <!-- search -->
             <div class="">
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
@@ -72,10 +76,12 @@
                   placeholder="Search" type="search">
               </div>
             </div>
+            <!-- /search -->
           </div>
         </div>
         <!-- table container -->
         <div class="relative">
+          <!-- loading spinner overlay -->
           <div x-show="loading"
             class="h-full bg-opacity-20 absolute z-10 top-0 left-0 w-full flex justify-center items-center text-center bg-indigo-100">
             <div class="text-indigo-300">
@@ -91,9 +97,11 @@
               </span>
             </div>
           </div>
+          <!-- /loading spinner overlay -->
           <table class="min-w-full relative divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
+                <!-- iterate over columns array. You gotta define your columns in the dataTable function. -->
                 <template x-for="column in columns">
                   <th scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -123,9 +131,11 @@
                     </template>
                   </th>
                 </template>
+                <!-- /column headers -->
               </tr>
             </thead>
             <tbody>
+              <!-- here comes the data. It's an array of rows. Each row is an array of columns. -->
               <template x-for="(row, idx) in rows">
                 <tr x-bind:class="(idx % 2  == 0) ? 'bg-gray-50' : 'bg-white'">
                   <template x-for="column in columns">
@@ -136,12 +146,14 @@
                   </template>
                 </tr>
               </template>
+              <!-- /data -->
             </tbody>
           </table>
         </div>
         <!-- card footer -->
         <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <!-- info: start, end, total records -->
             <div>
               <p class="text-sm text-gray-700" x-show="!loading">
                 Showing
@@ -153,7 +165,9 @@
                 results
               </p>
             </div>
+            <!-- /info -->
             <div>
+              <!-- buckle up for pagination! -->
               <nav x-show="totalPages > 1" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
                 aria-label="Pagination">
                 <button
@@ -210,20 +224,22 @@
                   </svg>
                 </button>
               </nav>
+              <!-- /pagination -->
               <!-- Alternative prev/next pagination
-                  <div class="flex-1 flex justify-between sm:justify-end">
-                    <button @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
-                      x-bind:class="currentPage === 1 ? 'opacity-50 bg-white' : ''"
-                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-                      Previous
-                    </button>
-                    <button @click.prevent="goToPage(currentPage + 1)"
-                      x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
-                      x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''"
-                      class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-                      Next
-                    </button>
-                  </div> -->
+              <div class="flex-1 flex justify-between sm:justify-end">
+                <button @click.prevent="goToPage(currentPage - 1)" x-bind:disabled="currentPage === 1"
+                  x-bind:class="currentPage === 1 ? 'opacity-50 bg-white' : ''"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                  Previous
+                </button>
+                <button @click.prevent="goToPage(currentPage + 1)"
+                  x-bind:disabled="currentPage === Math.ceil(totalRecords / pageSize)"
+                  x-bind:class="currentPage === Math.ceil(totalRecords / pageSize) ? 'opacity-50 bg-white' : ''"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                  Next
+                </button>
+              </div>
+              -->
             </div>
           </div>
         </div>
