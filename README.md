@@ -25,4 +25,4 @@ I'm using [live-server](https://github.com/tapio/live-server) for local dev.
 
 The concept of the POC is to reproduce functionality from DataTable's [sever-side mode](https://datatables.net/manual/server-side), so I need a server. There are a ton of great free APIs out there to use for testing, but I couldn't find any that would give me the server-side functionality I wanted to test with (pagination, ordering, etc.). So I'm using [json-server](https://github.com/typicode/json-server), which is a real neat little module that gives you a pretty full-fledged fake API from a json data set. There are other options out there, like Hasura, but the focus of this project is client-side; it should be agnostic to how the server works or really where the data even comes from.
 
-The data comes from [The Start Wars API](https://swapi.dev/) because I don't know, that's fun.
+The data comes from [The Star Wars API](https://swapi.dev/) because I don't know, that's fun.
