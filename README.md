@@ -1,5 +1,9 @@
 # chamonix
 
+## Demo
+
+https://adamtlord.github.io/chamonix/
+
 ## Background
 I ❤️ the jQuery plugin [DataTables](https://datatables.net/). I've been using it for ten years. I've used it on side projects and client projects, server-side and client side, with AJAX and static data.
 
